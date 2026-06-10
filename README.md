@@ -1,6 +1,6 @@
 # ☁️ 云形成高阶仿真实验 · Cloud Formation Simulation
 
-基于原生 HTML/CSS/JavaScript 开发的交互式物理仿真项目，还原云的形成原理，搭配B站风格高级可视化效果。
+
 
 ---
 
