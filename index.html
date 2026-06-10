@@ -54,7 +54,6 @@
             gap: 24px;
         }
 
-        /* 仿真模拟框 */
         .sim-cabin {
             width: 560px;
             height: 420px;
@@ -72,7 +71,6 @@
             overflow: hidden;
         }
 
-        /* 图例磨砂面板 */
         .legend {
             display: flex;
             gap: 48px;
@@ -93,7 +91,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* 粒子样式 */
         .particle {
             position: absolute;
             border-radius: 50%;
@@ -129,7 +126,6 @@
             gap: 20px;
         }
 
-        /* 控制面板 */
         .panel {
             background: var(--panel-bg);
             border-radius: 22px;
@@ -160,7 +156,6 @@
             margin-bottom: 10px;
         }
 
-        /* 美化滑块 */
         input[type="range"] {
             width: 100%;
             height: 8px;
@@ -184,7 +179,6 @@
             box-shadow: 0 0 14px rgba(79, 195, 247, 1);
         }
 
-        /* 按钮样式 */
         .btn-wrap {
             display: flex;
             gap: 16px;
@@ -203,7 +197,7 @@
         }
         .btn-start {
             background: linear-gradient(135deg, #26a69a, #4db6ac);
-            box-shadow: 0 4px 14px rgba(38, 166, 154, 0.35);
+            box-shadow: 0 4px 14px rgba(38, 166, 166, 0.35);
         }
         .btn-reset {
             background: linear-gradient(135deg, #ef5350, #ff7043);
@@ -217,7 +211,6 @@
             transform: translateY(0);
         }
 
-        /* 数据卡片 */
         .data-info {
             display: flex;
             gap: 16px;
@@ -243,7 +236,6 @@
             margin-top: 6px;
         }
 
-        /* 图表容器 */
         .chart-box {
             width: 100%;
             height: 200px;
@@ -266,7 +258,6 @@
             color: var(--text-secondary);
         }
 
-        /* 机器人图标 - 可拖拽 */
         .robot-icon {
             position: fixed;
             bottom: 30px;
@@ -284,22 +275,13 @@
             z-index: 1000;
             user-select: none;
         }
-
-        .robot-icon:active {
-            cursor: grabbing;
-        }
-
+        .robot-icon:active { cursor: grabbing; }
         .robot-icon:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(79, 195, 247, 0.6);
         }
+        .robot-icon::after { content: "🤖"; font-size: 30px; }
 
-        .robot-icon::after {
-            content: "🤖";
-            font-size: 30px;
-        }
-
-        /* 对话窗口 */
         .chat-window {
             position: fixed;
             bottom: 100px;
@@ -318,7 +300,6 @@
             z-index: 1000;
             user-select: none;
         }
-
         .chat-header {
             padding: 16px 20px;
             background: rgba(79, 195, 247, 0.1);
@@ -328,34 +309,17 @@
             align-items: center;
             cursor: grab;
         }
-
-        .chat-header:active {
-            cursor: grabbing;
-        }
-
-        .chat-header h4 {
-            color: var(--text-primary);
-            font-size: 16px;
-            font-weight: 500;
-        }
-
+        .chat-header:active { cursor: grabbing; }
+        .chat-header h4 { color: var(--text-primary); font-size: 16px; font-weight: 500; }
         .chat-close {
             color: var(--text-secondary);
             font-size: 20px;
             cursor: pointer;
             transition: color 0.2s;
         }
+        .chat-close:hover { color: #fff; }
 
-        .chat-close:hover {
-            color: #fff;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-        }
-
+        .chat-messages { flex: 1; padding: 16px; overflow-y: auto; }
         .chat-message {
             margin-bottom: 12px;
             padding: 10px 14px;
@@ -364,15 +328,13 @@
             line-height: 1.6;
             max-width: 85%;
         }
-
         .user-message {
             background: rgba(79, 195, 247, 0.2);
             color: var(--text-primary);
             margin-left: auto;
         }
-
         .ai-message {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255,255,255,0.08);
             color: var(--text-secondary);
             margin-right: auto;
         }
@@ -383,10 +345,9 @@
             padding: 16px;
             border-top: 1px solid var(--border-color);
         }
-
         #chatInput {
             flex: 1;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0,0,0,0.3);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 12px 16px;
@@ -395,7 +356,6 @@
             outline: none;
             user-select: text;
         }
-
         #sendBtn {
             padding: 12px 20px;
             background: var(--main-color);
@@ -406,515 +366,384 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
-        #sendBtn:hover {
-            background: var(--main-light);
-        }
+        #sendBtn:hover { background: var(--main-light); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="view-box">
-            <div class="sim-cabin" id="cabin"></div>
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="water"></div>
-                    <span>水蒸气</span>
-                </div>
-                <div class="legend-item">
-                    <div class="dust"></div>
-                    <span>凝结核</span>
-                </div>
-                <div class="legend-item">
-                    <div class="cloud"></div>
-                    <span>云团</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="control-area">
-            <div class="panel">
-                <h3 class="panel-title">参数控制</h3>
-
-                <div class="param">
-                    <div class="param-name">
-                        <span>水蒸气密度</span>
-                        <span id="waterVal">40</span>
-                    </div>
-                    <input type="range" id="waterSlider" min="10" max="80" value="40">
-                </div>
-
-                <div class="param">
-                    <div class="param-name">
-                        <span>凝结核浓度</span>
-                        <span id="dustVal">18</span>
-                    </div>
-                    <input type="range" id="dustSlider" min="5" max="40" value="18">
-                </div>
-
-                <div class="param">
-                    <div class="param-name">
-                        <span>环境温度</span>
-                        <span id="tempVal">0</span> ℃
-                    </div>
-                    <input type="range" id="tempSlider" min="-20" max="20" value="0">
-                </div>
-
-                <div class="param">
-                    <div class="param-name">
-                        <span>空气流速</span>
-                        <span id="windVal">45</span>
-                    </div>
-                    <input type="range" id="windSlider" min="10" max="100" value="45">
-                </div>
-
-                <div class="btn-wrap">
-                    <button class="btn btn-start" id="startBtn">启动仿真</button>
-                    <button class="btn btn-reset" id="resetBtn">重置</button>
-                </div>
-
-                <div class="data-info">
-                    <div class="data-item">
-                        <div class="data-num" id="cloudTotal">0</div>
-                        <div class="data-text">云团数量</div>
-                    </div>
-                    <div class="data-item">
-                        <div class="data-num" id="statusText">待机</div>
-                    </div>
-                </div>
-
-                <div class="chart-box">
-                    <canvas id="trendCanvas"></canvas>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h3 class="panel-title">原理解读</h3>
-                <div class="explain" id="explainText">
-                    待机状态<br>
-                    零上温度：水汽难液化，几乎无云<br>
-                    零下温度：水汽依附凝结核形成云<br>
-                    风速越大，粒子运动越快、云越易被吹散
-                </div>
-            </div>
+<div class="container">
+    <div class="view-box">
+        <div class="sim-cabin" id="cabin"></div>
+        <div class="legend">
+            <div class="legend-item"><div class="water"></div><span>水蒸气</span></div>
+            <div class="legend-item"><div class="dust"></div><span>凝结核</span></div>
+            <div class="legend-item"><div class="cloud"></div><span>云团</span></div>
         </div>
     </div>
 
-    <!-- 机器人图标 -->
-    <div class="robot-icon" id="robotIcon"></div>
-
-    <!-- 对话窗口 -->
-    <div class="chat-window" id="chatWindow">
-        <div class="chat-header" id="chatHeader">
-            <h4>💬 云仿真助手</h4>
-            <span class="chat-close" id="chatClose">×</span>
+    <div class="control-area">
+        <div class="panel">
+            <h3 class="panel-title">参数控制</h3>
+            <div class="param">
+                <div class="param-name"><span>水蒸气密度</span><span id="waterVal">40</span></div>
+                <input type="range" id="waterSlider" min="10" max="80" value="40">
+            </div>
+            <div class="param">
+                <div class="param-name"><span>凝结核浓度</span><span id="dustVal">18</span></div>
+                <input type="range" id="dustSlider" min="5" max="40" value="18">
+            </div>
+            <div class="param">
+                <div class="param-name"><span>环境温度</span><span id="tempVal">0</span>℃</div>
+                <input type="range" id="tempSlider" min="-20" max="20" value="0">
+            </div>
+            <div class="param">
+                <div class="param-name"><span>空气流速</span><span id="windVal">45</span></div>
+                <input type="range" id="windSlider" min="10" max="100" value="45">
+            </div>
+            <div class="btn-wrap">
+                <button class="btn btn-start" id="startBtn">启动仿真</button>
+                <button class="btn btn-reset" id="resetBtn">重置</button>
+            </div>
+            <div class="data-info">
+                <div class="data-item">
+                    <div class="data-num" id="cloudTotal">0</div>
+                    <div class="data-text">云团数量</div>
+                </div>
+                <div class="data-item">
+                    <div class="data-num" id="statusText">待机</div>
+                </div>
+            </div>
+            <div class="chart-box"><canvas id="trendCanvas"></canvas></div>
         </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="chat-message ai-message">
-                你好！我是云形成仿真助手，可以为你讲解实验原理、解答参数问题，也可以帮你分析当前的仿真数据。
+
+        <div class="panel">
+            <h3 class="panel-title">原理解读</h3>
+            <div class="explain" id="explainText">
+                待机状态<br>
+                零上温度：水汽难液化，几乎无云<br>
+                零下温度：水汽依附凝结核形成云<br>
+                风速越大，粒子运动越快、云越易被吹散
             </div>
         </div>
-        <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="输入你的问题...">
-            <button id="sendBtn">发送</button>
-        </div>
     </div>
+</div>
 
-    <script>
-        // 元素获取
-        const cabin = document.getElementById('cabin');
-        const waterSlider = document.getElementById('waterSlider');
-        const dustSlider = document.getElementById('dustSlider');
-        const tempSlider = document.getElementById('tempSlider');
-        const windSlider = document.getElementById('windSlider');
-        const waterVal = document.getElementById('waterVal');
-        const dustVal = document.getElementById('dustVal');
-        const tempVal = document.getElementById('tempVal');
-        const windVal = document.getElementById('windVal');
-        const cloudTotal = document.getElementById('cloudTotal');
-        const statusText = document.getElementById('statusText');
-        const explainText = document.getElementById('explainText');
-        const startBtn = document.getElementById('startBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const canvas = document.getElementById('trendCanvas');
-        const ctx = canvas.getContext('2d');
+<div class="robot-icon" id="robotIcon"></div>
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header" id="chatHeader">
+        <h4>💬 云仿真助手</h4>
+        <span class="chat-close" id="chatClose">×</span>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+        <div class="chat-message ai-message">你好！我是智能AI助手，有什么问题都可以问我～</div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="输入你的问题...">
+        <button id="sendBtn">发送</button>
+    </div>
+</div>
 
-        // 机器人&聊天窗口元素
-        const robotIcon = document.getElementById('robotIcon');
-        const chatWindow = document.getElementById('chatWindow');
-        const chatClose = document.getElementById('chatClose');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const chatHeader = document.getElementById('chatHeader');
+<script>
+    const cabin = document.getElementById('cabin');
+    const waterSlider = document.getElementById('waterSlider');
+    const dustSlider = document.getElementById('dustSlider');
+    const tempSlider = document.getElementById('tempSlider');
+    const windSlider = document.getElementById('windSlider');
+    const waterVal = document.getElementById('waterVal');
+    const dustVal = document.getElementById('dustVal');
+    const tempVal = document.getElementById('tempVal');
+    const windVal = document.getElementById('windVal');
+    const cloudTotal = document.getElementById('cloudTotal');
+    const statusText = document.getElementById('statusText');
+    const explainText = document.getElementById('explainText');
+    const startBtn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const canvas = document.getElementById('trendCanvas');
+    const ctx = canvas.getContext('2d');
 
-        // 基础配置
-        const MAX_RECORD = 90;
-        let recordList = [];
-        let isRun = false;
-        let waterCount = 40;
-        let dustCount = 18;
-        let nowTemp = 0;
-        let windSpeed = 45;
-        const baseWind = 45;
+    const robotIcon = document.getElementById('robotIcon');
+    const chatWindow = document.getElementById('chatWindow');
+    const chatClose = document.getElementById('chatClose');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatHeader = document.getElementById('chatHeader');
 
-        // 粒子数组
-        let waterList = [];
-        let dustList = [];
-        let cloudList = [];
-        const boxW = 560;
-        const boxH = 420;
+    const MAX_RECORD = 90;
+    let recordList = [];
+    let isRun = false;
+    let waterCount = 40;
+    let dustCount = 18;
+    let nowTemp = 0;
+    let windSpeed = 45;
+    const baseWind = 45;
 
-        // 画布适配
-        window.addEventListener('resize', () => {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-        });
+    let waterList = [];
+    let dustList = [];
+    let cloudList = [];
+    const boxW = 560;
+    const boxH = 420;
+
+    window.addEventListener('resize', () => {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
+    });
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
 
-        // 趋势图绘制
-        function drawChart() {
-            const w = canvas.width;
-            const h = canvas.height;
-            const pad = 30;
-            ctx.clearRect(0, 0, w, h);
-            if (recordList.length < 2) return;
-
-            let maxVal = Math.max(...recordList);
-            let yMax = maxVal === 0 ? 10 : Math.ceil(maxVal / 10) * 10;
-
-            ctx.strokeStyle = 'rgba(79, 195, 247, 0.2)';
-            ctx.fillStyle = '#b8c2cc';
-            ctx.lineWidth = 1;
-            const ySplit = 5;
-            for (let i = 0; i <= ySplit; i++) {
-                let y = pad + (h - pad * 2) * (1 - i / ySplit);
-                ctx.beginPath();
-                ctx.moveTo(pad, y);
-                ctx.lineTo(w - pad, y);
-                ctx.stroke();
-                ctx.font = "11px Microsoft Yahei";
-                ctx.fillText(String(Math.round(yMax * i / ySplit)), 8, y + 4);
-            }
-            const xSplit = 8;
-            for (let i = 0; i <= xSplit; i++) {
-                let x = pad + (w - pad) * i / xSplit;
-                ctx.beginPath();
-                ctx.moveTo(x, pad);
-                ctx.lineTo(x, h - pad);
-                ctx.stroke();
-            }
-
-            ctx.strokeStyle = '#4fc3f7';
-            ctx.lineWidth = 1.5;
+    function drawChart() {
+        const w = canvas.width;
+        const h = canvas.height;
+        const pad = 30;
+        ctx.clearRect(0,0,w,h);
+        if (recordList.length < 2) return;
+        let maxVal = Math.max(...recordList);
+        let yMax = maxVal === 0 ? 10 : Math.ceil(maxVal/10)*10;
+        ctx.strokeStyle = 'rgba(79,195,247,0.2)';
+        ctx.fillStyle = '#b8c2cc';
+        ctx.lineWidth = 1;
+        const ySplit =5;
+        for(let i=0;i<=ySplit;i++){
+            let y = pad + (h-pad*2)*(1-i/ySplit);
             ctx.beginPath();
-            ctx.moveTo(pad, pad);
-            ctx.lineTo(pad, h - pad);
+            ctx.moveTo(pad,y);
+            ctx.lineTo(w-pad,y);
             ctx.stroke();
+            ctx.font="11px Microsoft Yahei";
+            ctx.fillText(String(Math.round(yMax*i/ySplit)),8,y+4);
+        }
+        const xSplit=8;
+        for(let i=0;i<=xSplit;i++){
+            let x=pad+(w-pad)*i/xSplit;
             ctx.beginPath();
-            ctx.moveTo(pad, h - pad);
-            ctx.lineTo(w - pad, h - pad);
-            ctx.stroke();
-
-            ctx.fillStyle = '#b8c2cc';
-            ctx.font = "12px Microsoft Yahei";
-            ctx.fillText("云团数量", 5, 20);
-            ctx.fillText("运行时序", w - 60, h - 8);
-
-            ctx.beginPath();
-            ctx.strokeStyle = '#4fc3f7';
-            ctx.lineWidth = 2;
-            for (let i = 0; i < recordList.length; i++) {
-                let x = pad + (w - pad * 2) * i / (MAX_RECORD - 1);
-                let ratio = recordList[i] / yMax;
-                let y = pad + (h - pad * 2) * (1 - ratio);
-                y = Math.max(pad, Math.min(h - pad, y));
-                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-            }
+            ctx.moveTo(x,pad);
+            ctx.lineTo(x,h-pad);
             ctx.stroke();
         }
-
-        // 创建粒子
-        function createParticle(type, sp) {
-            const el = document.createElement('div');
-            if (type === 'water') {
-                el.className = 'particle water';
-            } else {
-                el.className = 'particle dust';
-            }
-            el.style.left = Math.random() * (boxW - 30) + 'px';
-            el.style.top = Math.random() * (boxH - 30) + 'px';
-            el.vx = (Math.random() - 0.5) * sp;
-            el.vy = (Math.random() - 0.5) * sp;
-            cabin.appendChild(el);
-            return el;
+        ctx.strokeStyle='#4fc3f7';
+        ctx.lineWidth=1.5;
+        ctx.beginPath();
+        ctx.moveTo(pad,pad);
+        ctx.lineTo(pad,h-pad);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(pad,h-pad);
+        ctx.lineTo(w-pad,h-pad);
+        ctx.stroke();
+        ctx.fillStyle='#b8c2cc';
+        ctx.font="12px Microsoft Yahei";
+        ctx.fillText("云团数量",5,20);
+        ctx.fillText("运行时序",w-60,h-8);
+        ctx.beginPath();
+        ctx.strokeStyle='#4fc3f7';
+        ctx.lineWidth=2;
+        for(let i=0;i<recordList.length;i++){
+            let x=pad+(w-pad*2)*i/(MAX_RECORD-1);
+            let ratio=recordList[i]/yMax;
+            let y=pad+(h-pad*2)*(1-ratio);
+            y=Math.max(pad,Math.min(h-pad,y));
+            i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
         }
+        ctx.stroke();
+    }
 
-        // 初始化
-        function initAll() {
-            cabin.innerHTML = '';
-            waterList = [];
-            dustList = [];
-            cloudList = [];
-            recordList = [];
+    function createParticle(type,sp){
+        const el=document.createElement('div');
+        if(type==='water'){el.className='particle water';}
+        else{el.className='particle dust';}
+        el.style.left=Math.random()*(boxW-30)+'px';
+        el.style.top=Math.random()*(boxH-30)+'px';
+        el.vx=(Math.random()-0.5)*sp;
+        el.vy=(Math.random()-0.5)*sp;
+        cabin.appendChild(el);
+        return el;
+    }
 
-            const wSp = 1.2 * (windSpeed / baseWind);
-            const dSp = 0.8 * (windSpeed / baseWind);
-            for (let i = 0; i < waterCount; i++) {
-                waterList.push(createParticle('water', wSp));
-            }
-            for (let i = 0; i < dustCount; i++) {
-                dustList.push(createParticle('dust', dSp));
-            }
+    function initAll(){
+        cabin.innerHTML='';
+        waterList=[];dustList=[];cloudList=[];recordList=[];
+        const wSp=1.2*(windSpeed/baseWind);
+        const dSp=0.8*(windSpeed/baseWind);
+        for(let i=0;i<waterCount;i++) waterList.push(createParticle('water',wSp));
+        for(let i=0;i<dustCount;i++) dustList.push(createParticle('dust',dSp));
+        isRun=false;statusText.innerText="待机";cloudTotal.innerText="0";
+        explainText.innerHTML=`待机状态<br/>
+零上温度：水汽难液化，几乎无云<br/>
+零下温度：水汽依附凝结核形成云<br/>
+风速越大，粒子运动越快、云越易被吹散`;
+        drawChart();
+    }
 
-            isRun = false;
-            statusText.innerText = "待机";
-            cloudTotal.innerText = "0";
-            explainText.innerHTML = `待机状态<br>
-            零上温度：水汽难液化，几乎无云<br>
-            零下温度：水汽依附凝结核形成云<br>
-            风速越大，粒子运动越快、云越易被吹散`;
+    function adjustWater(targetNum){
+        const diff=targetNum-waterList.length;
+        const sp=1.2*(windSpeed/baseWind);
+        if(diff>0){for(let i=0;i<diff;i++) waterList.push(createParticle('water',sp));}
+        else if(diff<0){for(let i=0;i<Math.abs(diff);i++){const p=waterList.pop();if(p)p.remove();}}
+    }
+
+    function adjustDust(targetNum){
+        const diff=targetNum-dustList.length;
+        const sp=0.8*(windSpeed/baseWind);
+        if(diff>0){for(let i=0;i<diff;i++) dustList.push(createParticle('dust',sp));}
+        else if(diff<0){for(let i=0;i<Math.abs(diff);i++){const p=dustList.pop();if(p)p.remove();}}
+    }
+
+    function updateAllSpeed(ratio){
+        waterList.forEach(p=>{p.vx*=ratio;p.vy*=ratio;});
+        dustList.forEach(p=>{p.vx*=ratio;p.vy*=ratio;});
+        cloudList.forEach(p=>{p.vx*=ratio;p.vy*=ratio;});
+    }
+
+    function moveList(list){
+        list.forEach(el=>{
+            let x=parseFloat(el.style.left);
+            let y=parseFloat(el.style.top);
+            x+=el.vx;y+=el.vy;
+            if(x<=0||x>=boxW-30)el.vx*=-1;
+            if(y<=0||y>=boxH-30)el.vy*=-1;
+            el.style.left=x+'px';
+            el.style.top=y+'px';
+        });
+    }
+
+    function refreshTip(){
+        if(!isRun)return;
+        if(nowTemp>0){explainText.innerText=`当前 ${nowTemp}℃（零上）：水汽无法液化，基本无云`;}
+        else if(nowTemp===0){explainText.innerText=`当前 0℃（临界）：仅少量水汽凝结`;}
+        else{explainText.innerText=`当前 ${nowTemp}℃（零下）：水汽液化成云，温度越低云越多`;}
+    }
+
+    function updateCloud(){
+        let target=0;
+        if(nowTemp<0){
+            let cold=Math.abs(nowTemp);
+            target=cold*1.5;
+            target+=(waterCount-40)*0.15;
+            target+=(dustCount-18)*0.2;
+            target-=(windSpeed-45)*0.3;
+            target=Math.max(0,Math.floor(target));
+        }
+        const diff=cloudList.length-target;
+        if(diff>0){cloudList.pop().remove();}
+        else if(diff<0){
+            const idx=Math.floor(Math.random()*waterList.length);
+            const cloud=document.createElement('div');
+            cloud.className='particle cloud';
+            cloud.style.left=waterList[idx].style.left;
+            cloud.style.top=waterList[idx].style.top;
+            cloud.vx=(Math.random()-0.5)*(windSpeed/80);
+            cloud.vy=(Math.random()-0.5)*(windSpeed/80)-0.12;
+            cabin.appendChild(cloud);
+            cloudList.push(cloud);
+        }
+        cloudTotal.innerText=cloudList.length;
+    }
+
+    function loop(){
+        if(isRun){
+            moveList(waterList);moveList(dustList);moveList(cloudList);
+            updateCloud();recordList.push(cloudList.length);
+            if(recordList.length>MAX_RECORD)recordList.shift();
             drawChart();
         }
+        requestAnimationFrame(loop);
+    }
 
-        // 增减水汽粒子
-        function adjustWater(targetNum) {
-            const diff = targetNum - waterList.length;
-            const sp = 1.2 * (windSpeed / baseWind);
-            if (diff > 0) {
-                for (let i = 0; i < diff; i++) waterList.push(createParticle('water', sp));
-            } else if (diff < 0) {
-                for (let i = 0; i < Math.abs(diff); i++) {
-                    const p = waterList.pop();
-                    if (p) p.remove();
-                }
-            }
+    waterSlider.oninput=function(){waterCount=+this.value;waterVal.innerText=waterCount;adjustWater(waterCount);};
+    dustSlider.oninput=function(){dustCount=+this.value;dustVal.innerText=dustCount;adjustDust(dustCount);};
+    tempSlider.oninput=function(){nowTemp=+this.value;tempVal.innerText=nowTemp;refreshTip();};
+    windSlider.oninput=function(){const oldSpeed=windSpeed;windSpeed=+this.value;windVal.innerText=windSpeed;const ratio=windSpeed/oldSpeed;updateAllSpeed(ratio);};
+    startBtn.onclick=function(){isRun=true;statusText.innerText="运行中";refreshTip();};
+    resetBtn.onclick=function(){initAll();};
+
+    let robotDrag=false;let robotOffsetX,robotOffsetY;
+    robotIcon.addEventListener('mousedown',e=>{
+        robotDrag=true;robotOffsetX=e.clientX-robotIcon.offsetLeft;robotOffsetY=e.clientY-robotIcon.offsetTop;
+        robotIcon.style.right='auto';robotIcon.style.bottom='auto';
+    });
+    let chatDrag=false;let chatOffsetX,chatOffsetY;
+    chatHeader.addEventListener('mousedown',e=>{
+        chatDrag=true;chatOffsetX=e.clientX-chatWindow.offsetLeft;chatOffsetY=e.clientY-chatWindow.offsetTop;
+        chatWindow.style.right='auto';chatWindow.style.bottom='auto';
+    });
+    document.addEventListener('mousemove',e=>{
+        const winW=document.documentElement.clientWidth;const winH=document.documentElement.clientHeight;
+        if(robotDrag){
+            let x=e.clientX-robotOffsetX;let y=e.clientY-robotOffsetY;
+            x=Math.max(0,Math.min(x,winW-robotIcon.offsetWidth));
+            y=Math.max(0,Math.min(y,winH-robotIcon.offsetHeight));
+            robotIcon.style.left=x+'px';robotIcon.style.top=y+'px';
         }
-
-        // 增减凝结核粒子
-        function adjustDust(targetNum) {
-            const diff = targetNum - dustList.length;
-            const sp = 0.8 * (windSpeed / baseWind);
-            if (diff > 0) {
-                for (let i = 0; i < diff; i++) dustList.push(createParticle('dust', sp));
-            } else if (diff < 0) {
-                for (let i = 0; i < Math.abs(diff); i++) {
-                    const p = dustList.pop();
-                    if (p) p.remove();
-                }
-            }
+        if(chatDrag){
+            let x=e.clientX-chatOffsetX;let y=e.clientY-chatOffsetY;
+            x=Math.max(0,Math.min(x,winW-chatWindow.offsetWidth));
+            y=Math.max(0,Math.min(y,winH-chatWindow.offsetHeight));
+            chatWindow.style.left=x+'px';chatWindow.style.top=y+'px';
         }
+    });
+    document.addEventListener('mouseup',()=>{robotDrag=false;chatDrag=false;});
+    robotIcon.addEventListener('click',()=>{if(robotDrag)return;chatWindow.style.display=chatWindow.style.display==='flex'?'none':'flex';});
+    chatClose.addEventListener('click',()=>{chatWindow.style.display='none';});
 
-        // 修改所有粒子速度
-        function updateAllSpeed(ratio) {
-            waterList.forEach(p => { p.vx *= ratio; p.vy *= ratio; });
-            dustList.forEach(p => { p.vx *= ratio; p.vy *= ratio; });
-            cloudList.forEach(p => { p.vx *= ratio; p.vy *= ratio; });
-        }
+    // ====================== 真实 AI 聊天 ======================
+    async function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
 
-        // 粒子移动
-        function moveList(list) {
-            list.forEach(el => {
-                let x = parseFloat(el.style.left);
-                let y = parseFloat(el.style.top);
-                x += el.vx;
-                y += el.vy;
-                if (x <= 0 || x >= boxW - 30) el.vx *= -1;
-                if (y <= 0 || y >= boxH - 30) el.vy *= -1;
-                el.style.left = x + 'px';
-                el.style.top = y + 'px';
+        const userMsg = document.createElement('div');
+        userMsg.className = 'chat-message user-message';
+        userMsg.textContent = text;
+        chatMessages.appendChild(userMsg);
+        chatInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // ==============================================
+        // 【唯一需要你填写的地方】把你的硅基密钥填在这里！
+        // ==============================================
+        const API_KEY = "sk-amykocwbuvpuyayfwavalueqjxlczrvvpiakjqhfkjkkbtxs";
+        // ==============================================
+
+        const apiUrl = "https://api.siliconflow.cn/v1/chat/completions";
+
+        try {
+            const res = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "Qwen2.5-7B-Instruct",
+                    messages: [
+                        { role: "system", content: "你是全能智能AI助手，回答所有问题，语言简洁友好。" },
+                        { role: "user", content: text }
+                    ],
+                    temperature: 0.6,
+                    stream: false
+                })
             });
+            const data = await res.json();
+            const reply = data.choices[0].message.content;
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'chat-message ai-message';
+            aiMsg.textContent = reply;
+            chatMessages.appendChild(aiMsg);
+        } catch (e) {
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'chat-message ai-message';
+            aiMsg.textContent = "网络异常，请检查密钥或网络";
+            chatMessages.appendChild(aiMsg);
         }
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
-        // 提示文字更新
-        function refreshTip() {
-            if (!isRun) return;
-            if (nowTemp > 0) {
-                explainText.innerText = `当前 ${nowTemp}℃（零上）：水汽无法液化，基本无云`;
-            } else if (nowTemp === 0) {
-                explainText.innerText = `当前 0℃（临界）：仅少量水汽凝结`;
-            } else {
-                explainText.innerText = `当前 ${nowTemp}℃（零下）：水汽液化成云，温度越低云越多`;
-            }
-        }
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') sendMessage();
+    });
 
-        // 云量更新
-        function updateCloud() {
-            let target = 0;
-            if (nowTemp < 0) {
-                let cold = Math.abs(nowTemp);
-                target = cold * 1.5;
-                target += (waterCount - 40) * 0.15;
-                target += (dustCount - 18) * 0.2;
-                target -= (windSpeed - 45) * 0.3;
-                target = Math.max(0, Math.floor(target));
-            }
-
-            const diff = cloudList.length - target;
-            if (diff > 0) {
-                cloudList.pop().remove();
-            } else if (diff < 0) {
-                const idx = Math.floor(Math.random() * waterList.length);
-                const cloud = document.createElement('div');
-                cloud.className = 'particle cloud';
-                cloud.style.left = waterList[idx].style.left;
-                cloud.style.top = waterList[idx].style.top;
-                cloud.vx = (Math.random() - 0.5) * (windSpeed / 80);
-                cloud.vy = (Math.random() - 0.5) * (windSpeed / 80) - 0.12;
-                cabin.appendChild(cloud);
-                cloudList.push(cloud);
-            }
-            cloudTotal.innerText = cloudList.length;
-        }
-
-        // 主循环
-        function loop() {
-            if (isRun) {
-                moveList(waterList);
-                moveList(dustList);
-                moveList(cloudList);
-                updateCloud();
-
-                recordList.push(cloudList.length);
-                if (recordList.length > MAX_RECORD) recordList.shift();
-                drawChart();
-            }
-            requestAnimationFrame(loop);
-        }
-
-        // 滑块事件
-        waterSlider.oninput = function () {
-            waterCount = +this.value;
-            waterVal.innerText = waterCount;
-            adjustWater(waterCount);
-        };
-
-        dustSlider.oninput = function () {
-            dustCount = +this.value;
-            dustVal.innerText = dustCount;
-            adjustDust(dustCount);
-        };
-
-        tempSlider.oninput = function () {
-            nowTemp = +this.value;
-            tempVal.innerText = nowTemp;
-            refreshTip();
-        };
-
-        windSlider.oninput = function () {
-            const oldSpeed = windSpeed;
-            windSpeed = +this.value;
-            windVal.innerText = windSpeed;
-            const ratio = windSpeed / oldSpeed;
-            updateAllSpeed(ratio);
-        };
-
-        startBtn.onclick = function () {
-            isRun = true;
-            statusText.innerText = "运行中";
-            refreshTip();
-        };
-
-        resetBtn.onclick = function () {
-            initAll();
-        };
-
-        // ========== 机器人图标 拖拽逻辑 ==========
-        let robotDrag = false;
-        let robotOffsetX, robotOffsetY;
-        robotIcon.addEventListener('mousedown', e => {
-            robotDrag = true;
-            robotOffsetX = e.clientX - robotIcon.offsetLeft;
-            robotOffsetY = e.clientY - robotIcon.offsetTop;
-            robotIcon.style.right = 'auto';
-            robotIcon.style.bottom = 'auto';
-        });
-
-        // ========== 聊天窗口 拖拽逻辑 ==========
-        let chatDrag = false;
-        let chatOffsetX, chatOffsetY;
-        chatHeader.addEventListener('mousedown', e => {
-            chatDrag = true;
-            chatOffsetX = e.clientX - chatWindow.offsetLeft;
-            chatOffsetY = e.clientY - chatWindow.offsetTop;
-            chatWindow.style.right = 'auto';
-            chatWindow.style.bottom = 'auto';
-        });
-
-        // 全局移动监听
-        document.addEventListener('mousemove', e => {
-            const winW = document.documentElement.clientWidth;
-            const winH = document.documentElement.clientHeight;
-
-            // 限制机器人不超出屏幕
-            if (robotDrag) {
-                let x = e.clientX - robotOffsetX;
-                let y = e.clientY - robotOffsetY;
-                x = Math.max(0, Math.min(x, winW - robotIcon.offsetWidth));
-                y = Math.max(0, Math.min(y, winH - robotIcon.offsetHeight));
-                robotIcon.style.left = x + 'px';
-                robotIcon.style.top = y + 'px';
-            }
-
-            // 限制聊天窗口不超出屏幕
-            if (chatDrag) {
-                let x = e.clientX - chatOffsetX;
-                let y = e.clientY - chatOffsetY;
-                x = Math.max(0, Math.min(x, winW - chatWindow.offsetWidth));
-                y = Math.max(0, Math.min(y, winH - chatWindow.offsetHeight));
-                chatWindow.style.left = x + 'px';
-                chatWindow.style.top = y + 'px';
-            }
-        });
-
-        // 结束拖拽
-        document.addEventListener('mouseup', () => {
-            robotDrag = false;
-            chatDrag = false;
-        });
-
-        // 点击机器人 打开/关闭弹窗
-        robotIcon.addEventListener('click', () => {
-            // 拖拽时不触发点击
-            if(robotDrag) return;
-            chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
-        });
-
-        // 关闭弹窗
-        chatClose.addEventListener('click', () => {
-            chatWindow.style.display = 'none';
-        });
-
-        // 发送消息
-        function sendMessage() {
-            const text = chatInput.value.trim();
-            if (!text) return;
-
-            const userMsg = document.createElement('div');
-            userMsg.className = 'chat-message user-message';
-            userMsg.textContent = text;
-            chatMessages.appendChild(userMsg);
-            chatInput.value = '';
-
-            setTimeout(() => {
-                const aiMsg = document.createElement('div');
-                aiMsg.className = 'chat-message ai-message';
-                aiMsg.textContent = '我收到你的问题啦！目前我还在学习中，你可以先试试调整温度、风速等参数，观察云团的变化哦~';
-                chatMessages.appendChild(aiMsg);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 800);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        sendBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', e => {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        // 页面初始化
-        initAll();
-        loop();
-    </script>
+    initAll();
+    loop();
+</script>
 </body>
 </html>
