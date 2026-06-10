@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云形成仿真实验 | Cloud Formation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", -apple-system, sans-serif;
+        }
+
+        :root {
+            --primary: #4fc3f7;
+            --cloud-color: #ffffff;
+            --text-main: #f5f5f5;
+            --text-sub: #b0b0b0;
+            --panel-bg: rgba(40, 40, 45, 0.85);
+            --border-color: rgba(79, 195, 247, 0.25);
+            --bg-dark: #121214;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-dark);
+            padding: 20px;
+        }
+
+        .container {
+            width: 98%;
+            max-width: 1300px;
+            height: 90vh;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .view-box {
+            flex: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .sim-cabin {
+            width: 560px;
+            height: 420px;
+            position: relative;
+            background-color: #1a1a1f;
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            box-shadow: inset 0 0 40px rgba(79, 195, 247, 0.15), 0 8px 24px rgba(0,0,0.5);
+            overflow: hidden;
+        }
+
+        .legend {
+            display: flex;
+            gap: 40px;
+            padding: 14px 24px;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            font-size: 15px;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+        }
+        .water {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            box-shadow: 0 0 8px rgba(79, 195, 0.7);
+        }
+        .dust {
+            width: 6px;
+            height: 6px;
+            background: #999999;
+            opacity: 0.9;
+        }
+        .cloud {
+            width: 28px;
+            height: 28px;
+            background: var(--cloud-color);
+            filter: blur(5px);
+            opacity: 0.95;
+            box-shadow: 0 0 12px rgba(255,255,255,0.6);
+        }
+
+        .control-area {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 6px 20px rgba(0,0,0.4);
+            border: 1px solid var(--border-color);
+        }
+
+        .panel-title {
+            font-size: 18px;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .param {
+            margin-bottom: 18px;
+        }
+        .param-name {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: rgba(79, 195, 247, 0.2);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .btn-wrap {
+            display: flex;
+            gap: 14px;
+            margin-top: 8px;
+        }
+        .btn {
+            flex: 1;
+            padding: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s;
+            color: #fff;
+        }
+        .btn-start {
+            background: #26a69a;
+        }
+        .btn-reset {
+            background: #ef5350;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .data-info {
+            display: flex;
+            gap: 15px;
+            margin-top: 16px;
+        }
+        .data-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: rgba(79, 195, 247, 0.1);
+            border-radius: 8px;
+        }
+        .data-num {
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .data-text {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: 4px;
+        }
+
+        .chart-box {
+            width: 100%;
+            height: 200px;
+            background: #1a1a1f;
+            border-radius: 12px;
+            margin-top: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        #trendCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .explain {
+            line-height: 1.7;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="view-box">
+            <div class="sim-cabin" id="cabin"></div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="water"></div>
+                    <span>水蒸气</span>
+                </div>
+                <div class="legend-item">
+                    <div class="dust"></div>
+                    <span>凝结核</span>
+                </div>
+                <div class="legend-item">
+                    <div class="cloud"></div>
+                    <span>云团</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-area">
+            <div class="panel">
+                <h3 class="panel-title">参数控制</h3>
+
+                <div class="param">
+                    <div class="param-name">
+                        <span>水蒸气密度</span>
+                        <span id="waterVal">40</span>
+                    </div>
+                    <input type="range" id="waterSlider" min="10" max="80" value="40">
+                </div>
+
+                <div class="param">
+                    <div class="param-name">
+                        <span>凝结核浓度</span>
+                        <span id="dustVal">18</span>
+                    </div>
+                    <input type="range" id="dustSlider" min="5" max="40" value="18">
+                </div>
+
+                <div class="param">
+                    <div class="param-name">
+                        <span>环境温度</span>
+                        <span id="tempVal">0</span> ℃
+                    </div>
+                    <input type="range" id="tempSlider" min="-20" max="20" value="0">
+                </div>
+
+                <div class="param">
+                    <div class="param-name">
+                        <span>空气流速</span>
+                        <span id="windVal">45</span>
+                    </div>
+                    <input type="range" id="windSlider" min="10" max="100" value="45">
+                </div>
+
+                <div class="btn-wrap">
+                    <button class="btn btn-start" id="startBtn">启动仿真</button>
+                    <button class="btn btn-reset" id="resetBtn">重置</button>
+                </div>
+
+                <div class="data-info">
+                    <div class="data-item">
+                        <div class="data-num" id="cloudTotal">0</div>
+                        <div class="data-text">云团数量</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-num" id="statusText">待机</div>
+                    </div>
+                </div>
+
+                <div class="chart-box">
+                    <canvas id="trendCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3 class="panel-title">原理解读</h3>
+                <div class="explain" id="explainText">
+                    待机状态<br>
+                    零上温度：水汽难液化，几乎无云<br>
+                    零下温度：水汽依附凝结核形成云<br>
+                    风速越大，粒子运动越快、云越易被吹散
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 元素获取
+        const cabin = document.getElementById('cabin');
+        const waterSlider = document.getElementById('waterSlider');
+        const dustSlider = document.getElementById('dustSlider');
+        const tempSlider = document.getElementById('tempSlider');
+        const windSlider = document.getElementById('windSlider');
+        const waterVal = document.getElementById('waterVal');
+        const dustVal = document.getElementById('dustVal');
+        const tempVal = document.getElementById('tempVal');
+        const windVal = document.getElementById('windVal');
+        const cloudTotal = document.getElementById('cloudTotal');
+        const statusText = document.getElementById('statusText');
+        const explainText = document.getElementById('explainText');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const canvas = document.getElementById('trendCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 基础配置
+        const MAX_RECORD = 90;
+        let recordList = [];
+        let isRun = false;
+        let waterCount = 40;
+        let dustCount = 18;
+        let nowTemp = 0;
+        let windSpeed = 45;
+        const baseWind = 45;
+
+        // 粒子数组
+        let waterList = [];
+        let dustList = [];
+        let cloudList = [];
+        const boxW = 560;
+        const boxH = 420;
+
+        // 画布适配
+        window.addEventListener('resize', () => {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        });
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+        // 趋势图 - 纯空心折线
+        function drawChart() {
+            const w = canvas.width;
+            const h = canvas.height;
+            const pad = 30;
+            ctx.clearRect(0, 0, w, h);
+            if (recordList.length < 2) return;
+
+            let maxVal = Math.max(...recordList);
+            let yMax = maxVal === 0 ? 10 : Math.ceil(maxVal / 10) * 10;
+
+            ctx.strokeStyle = 'rgba(79, 195, 247, 0.2)';
+            ctx.fillStyle = '#b0b0b0';
+            ctx.lineWidth = 1;
+            const ySplit = 5;
+            for (let i = 0; i <= ySplit; i++) {
+                let y = pad + (h - pad * 2) * (1 - i / ySplit);
+                ctx.beginPath();
+                ctx.moveTo(pad, y);
+                ctx.lineTo(w - pad, y);
+                ctx.stroke();
+                ctx.font = "11px Microsoft Yahei";
+                ctx.fillText(String(Math.round(yMax * i / ySplit)), 8, y + 4);
+            }
+            const xSplit = 8;
+            for (let i = 0; i <= xSplit; i++) {
+                let x = pad + (w - pad) * i / xSplit;
+                ctx.beginPath();
+                ctx.moveTo(x, pad);
+                ctx.lineTo(x, h - pad);
+                ctx.stroke();
+            }
+
+            ctx.strokeStyle = '#4fc3f7';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(pad, pad);
+            ctx.lineTo(pad, h - pad);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pad, h - pad);
+            ctx.lineTo(w - pad, h - pad);
+            ctx.stroke();
+
+            ctx.fillStyle = '#b0b0b0';
+            ctx.font = "12px Microsoft Yahei";
+            ctx.fillText("云团数量", 5, 20);
+            ctx.fillText("运行时序", w - 60, h - 8);
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#4fc3f7';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < recordList.length; i++) {
+                let x = pad + (w - pad * 2) * i / (MAX_RECORD - 1);
+                let ratio = recordList[i] / yMax;
+                let y = pad + (h - pad * 2) * (1 - ratio);
+                y = Math.max(pad, Math.min(h - pad, y));
+                i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        // 创建单个粒子
+        function createParticle(type, sp) {
+            const el = document.createElement('div');
+            if (type === 'water') {
+                el.className = 'particle water';
+            } else {
+                el.className = 'particle dust';
+            }
+            el.style.left = Math.random() * (boxW - 30) + 'px';
+            el.style.top = Math.random() * (boxH - 30) + 'px';
+            el.vx = (Math.random() - 0.5) * sp;
+            el.vy = (Math.random() - 0.5) * sp;
+            cabin.appendChild(el);
+            return el;
+        }
+
+        // 初始化（仅重置按钮调用）
+        function initAll() {
+            cabin.innerHTML = '';
+            waterList = [];
+            dustList = [];
+            cloudList = [];
+            recordList = [];
+
+            const wSp = 1.2 * (windSpeed / baseWind);
+            const dSp = 0.8 * (windSpeed / baseWind);
+            for (let i = 0; i < waterCount; i++) {
+                waterList.push(createParticle('water', wSp));
+            }
+            for (let i = 0; i < dustCount; i++) {
+                dustList.push(createParticle('dust', dSp));
+            }
+
+            isRun = false;
+            statusText.innerText = "待机";
+            cloudTotal.innerText = "0";
+            explainText.innerHTML = `待机状态<br>
+            零上温度：水汽难液化，几乎无云<br>
+            零下温度：水汽依附凝结核形成云<br>
+            风速越大，粒子运动越快、云越易被吹散`;
+            drawChart();
+        }
+
+        // 动态增减水汽粒子（不删云、不清图表）
+        function adjustWater(targetNum) {
+            const diff = targetNum - waterList.length;
+            const sp = 1.2 * (windSpeed / baseWind);
+            if (diff > 0) {
+                for (let i = 0; i < diff; i++) waterList.push(createParticle('water', sp));
+            } else if (diff < 0) {
+                for (let i = 0; i < Math.abs(diff); i++) {
+                    const p = waterList.pop();
+                    if (p) p.remove();
+                }
+            }
+        }
+
+        // 动态增减凝结核粒子（不删云、不清图表）
+        function adjustDust(targetNum) {
+            const diff = targetNum - dustList.length;
+            const sp = 0.8 * (windSpeed / baseWind);
+            if (diff > 0) {
+                for (let i = 0; i < diff; i++) dustList.push(createParticle('dust', sp));
+            } else if (diff < 0) {
+                for (let i = 0; i < Math.abs(diff); i++) {
+                    const p = dustList.pop();
+                    if (p) p.remove();
+                }
+            }
+        }
+
+        // 统一修改所有粒子速度（核心：不重建、不删除任何元素）
+        function updateAllSpeed(ratio) {
+            waterList.forEach(p => { p.vx *= ratio; p.vy *= ratio; });
+            dustList.forEach(p => { p.vx *= ratio; p.vy *= ratio; });
+            cloudList.forEach(p => { p.vx *= ratio; p.vy *= ratio; });
+        }
+
+        // 粒子移动
+        function moveList(list) {
+            list.forEach(el => {
+                let x = parseFloat(el.style.left);
+                let y = parseFloat(el.style.top);
+                x += el.vx;
+                y += el.vy;
+                if (x <= 0 || x >= boxW - 30) el.vx *= -1;
+                if (y <= 0 || y >= boxH - 30) el.vy *= -1;
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
+            });
+        }
+
+        // 更新文字提示
+        function refreshTip() {
+            if (!isRun) return;
+            if (nowTemp > 0) {
+                explainText.innerText = `当前 ${nowTemp}℃（零上）：水汽无法液化，基本无云`;
+            } else if (nowTemp === 0) {
+                explainText.innerText = `当前 0℃（临界）：仅少量水汽凝结`;
+            } else {
+                explainText.innerText = `当前 ${nowTemp}℃（零下）：水汽液化成云，温度越低云越多`;
+            }
+        }
+
+        // 云量计算（平滑变化）
+        function updateCloud() {
+            let target = 0;
+            if (nowTemp < 0) {
+                let cold = Math.abs(nowTemp);
+                target = cold * 1.5;
+                target += (waterCount - 40) * 0.15;
+                target += (dustCount - 18) * 0.2;
+                target -= (windSpeed - 45) * 0.3;
+                target = Math.max(0, Math.floor(target));
+            }
+
+            const diff = cloudList.length - target;
+            if (diff > 0) {
+                cloudList.pop().remove();
+            } else if (diff < 0) {
+                const idx = Math.floor(Math.random() * waterList.length);
+                const cloud = document.createElement('div');
+                cloud.className = 'particle cloud';
+                cloud.style.left = waterList[idx].style.left;
+                cloud.style.top = waterList[idx].style.top;
+                cloud.vx = (Math.random() - 0.5) * (windSpeed / 80);
+                cloud.vy = (Math.random() - 0.5) * (windSpeed / 80) - 0.12;
+                cabin.appendChild(cloud);
+                cloudList.push(cloud);
+            }
+            cloudTotal.innerText = cloudList.length;
+        }
+
+        // 主循环
+        function loop() {
+            if (isRun) {
+                moveList(waterList);
+                moveList(dustList);
+                moveList(cloudList);
+                updateCloud();
+
+                recordList.push(cloudList.length);
+                if (recordList.length > MAX_RECORD) recordList.shift();
+                drawChart();
+            }
+            requestAnimationFrame(loop);
+        }
+
+        // ========== 滑块事件（全部不重置粒子/数据） ==========
+        // 水蒸气
+        waterSlider.oninput = function () {
+            waterCount = +this.value;
+            waterVal.innerText = waterCount;
+            adjustWater(waterCount);
+        };
+
+        // 凝结核
+        dustSlider.oninput = function () {
+            dustCount = +this.value;
+            dustVal.innerText = dustCount;
+            adjustDust(dustCount);
+        };
+
+        // 温度
+        tempSlider.oninput = function () {
+            nowTemp = +this.value;
+            tempVal.innerText = nowTemp;
+            refreshTip();
+        };
+
+        // 风速【重点修复】：只改速度，不重建粒子、不清空数据
+        windSlider.oninput = function () {
+            const oldSpeed = windSpeed;
+            windSpeed = +this.value;
+            windVal.innerText = windSpeed;
+            const ratio = windSpeed / oldSpeed;
+            updateAllSpeed(ratio);
+        };
+
+        // 启动
+        startBtn.onclick = function () {
+            isRun = true;
+            statusText.innerText = "运行中";
+            refreshTip();
+        };
+
+        // 重置（仅此处完整复位）
+        resetBtn.onclick = function () {
+            initAll();
+        };
+
+        // 初始化运行
+        initAll();
+        loop();
+    </script>
