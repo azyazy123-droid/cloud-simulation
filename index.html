@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>云形成仿真实验 | Cloud Formation</title>
+    <title>云形成仿真实验 - Cloud Formation Simulation</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Microsoft Yahei", -apple-system, sans-serif;
+            font-family: "Microsoft Yahei", system-ui, -apple-system, sans-serif;
         }
 
         :root {
-            --primary: #4fc3f7;
+            --main-color: #4fc3f7;
+            --main-light: #81d4fa;
             --cloud-color: #ffffff;
-            --text-main: #f5f5f5;
-            --text-sub: #b0b0b0;
-            --panel-bg: rgba(40, 40, 45, 0.85);
-            --border-color: rgba(79, 195, 247, 0.25);
-            --bg-dark: #121214;
+            --text-primary: #f8f9fa;
+            --text-secondary: #b8c2cc;
+            --panel-bg: rgba(28, 36, 52, 0.75);
+            --border-color: rgba(79, 195, 247, 0.4);
+            --btn-bg: #26a69a;
+            --btn-danger: #ef5350;
         }
 
         body {
@@ -27,16 +29,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--bg-dark);
-            padding: 20px;
+            background: linear-gradient(135deg, #050a18 0%, #0d1629 50%, #081020 100%);
+            background-attachment: fixed;
+            padding: 24px;
+            overflow-x: hidden;
         }
 
         .container {
-            width: 98%;
-            max-width: 1300px;
+            width: 100%;
+            max-width: 1320px;
             height: 90vh;
             display: flex;
-            gap: 25px;
+            gap: 32px;
             align-items: center;
         }
 
@@ -47,36 +51,49 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 18px;
+            gap: 24px;
         }
 
+        /* 仿真模拟框 */
         .sim-cabin {
             width: 560px;
             height: 420px;
             position: relative;
-            background-color: #1a1a1f;
-            border-radius: 20px;
-            border: 2px solid var(--border-color);
-            box-shadow: inset 0 0 40px rgba(79, 195, 247, 0.15), 0 8px 24px rgba(0,0,0.5);
+            background: linear-gradient(145deg, #121b2e, #0e1524);
+            border-radius: 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: 
+                0 0 25px rgba(79, 195, 247, 0.15),
+                0 10px 40px rgba(0, 0, 0, 0.5),
+                inset 0 0 60px rgba(79, 195, 247, 0.08),
+                inset 0 0 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             overflow: hidden;
         }
 
+        /* 图例磨砂面板 */
         .legend {
             display: flex;
-            gap: 40px;
-            padding: 14px 24px;
+            gap: 48px;
+            padding: 16px 32px;
             background: var(--panel-bg);
-            border-radius: 12px;
+            border-radius: 18px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: var(--text-main);
+            gap: 12px;
+            color: var(--text-primary);
             font-size: 15px;
+            letter-spacing: 0.5px;
         }
 
+        /* 粒子样式 */
         .particle {
             position: absolute;
             border-radius: 50%;
@@ -84,22 +101,23 @@
         .water {
             width: 8px;
             height: 8px;
-            background: var(--primary);
-            box-shadow: 0 0 8px rgba(79, 195, 0.7);
+            background: var(--main-color);
+            box-shadow: 0 0 12px rgba(79, 195, 247, 0.9), 0 0 4px #fff;
         }
         .dust {
             width: 6px;
             height: 6px;
-            background: #999999;
-            opacity: 0.9;
+            background: #c0c8d0;
+            opacity: 0.92;
+            box-shadow: 0 0 6px rgba(200, 208, 216, 0.5);
         }
         .cloud {
             width: 28px;
             height: 28px;
             background: var(--cloud-color);
-            filter: blur(5px);
+            filter: blur(6px);
             opacity: 0.95;
-            box-shadow: 0 0 12px rgba(255,255,255,0.6);
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.8);
         }
 
         .control-area {
@@ -108,115 +126,134 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 18px;
+            gap: 20px;
         }
 
+        /* 控制面板 */
         .panel {
             background: var(--panel-bg);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 6px 20px rgba(0,0,0.4);
+            border-radius: 22px;
+            padding: 28px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .panel-title {
-            font-size: 18px;
-            color: var(--text-main);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            font-size: 19px;
+            color: var(--text-primary);
+            margin-bottom: 22px;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
+            font-weight: 500;
         }
 
         .param {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
         .param-name {
             display: flex;
             justify-content: space-between;
             font-size: 14px;
-            color: var(--text-sub);
-            margin-bottom: 8px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
         }
 
+        /* 美化滑块 */
         input[type="range"] {
             width: 100%;
-            height: 6px;
-            background: rgba(79, 195, 247, 0.2);
-            border-radius: 3px;
+            height: 8px;
+            background: rgba(79, 195, 247, 0.15);
+            border-radius: 999px;
             outline: none;
             -webkit-appearance: none;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            background: var(--primary);
+            background: var(--main-color);
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(79, 195, 247, 0.7);
         }
         input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
+            box-shadow: 0 0 14px rgba(79, 195, 247, 1);
         }
 
+        /* 按钮样式 */
         .btn-wrap {
             display: flex;
-            gap: 14px;
-            margin-top: 8px;
+            gap: 16px;
+            margin-top: 10px;
         }
         .btn {
             flex: 1;
-            padding: 10px 0;
+            padding: 12px 0;
             border: none;
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.25s;
+            transition: all 0.25s ease;
             color: #fff;
         }
         .btn-start {
-            background: #26a69a;
+            background: linear-gradient(135deg, #26a69a, #4db6ac);
+            box-shadow: 0 4px 14px rgba(38, 166, 154, 0.35);
         }
         .btn-reset {
-            background: #ef5350;
+            background: linear-gradient(135deg, #ef5350, #ff7043);
+            box-shadow: 0 4px 14px rgba(239, 83, 80, 0.35);
         }
         .btn:hover {
-            opacity: 0.9;
             transform: translateY(-2px);
+            filter: brightness(1.08);
+        }
+        .btn:active {
+            transform: translateY(0);
         }
 
+        /* 数据卡片 */
         .data-info {
             display: flex;
-            gap: 15px;
-            margin-top: 16px;
+            gap: 16px;
+            margin-top: 20px;
         }
         .data-item {
             flex: 1;
             text-align: center;
-            padding: 10px;
+            padding: 14px 8px;
             background: rgba(79, 195, 247, 0.1);
-            border-radius: 8px;
+            border-radius: 16px;
+            border: 1px solid rgba(79, 195, 247, 0.25);
+            box-shadow: inset 0 0 8px rgba(79, 195, 247, 0.05);
         }
         .data-num {
-            font-size: 18px;
-            color: var(--primary);
-            font-weight: bold;
+            font-size: 20px;
+            color: var(--main-color);
+            font-weight: 600;
         }
         .data-text {
-            font-size: 12px;
-            color: var(--text-sub);
-            margin-top: 4px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
         }
 
+        /* 图表容器 */
         .chart-box {
             width: 100%;
             height: 200px;
-            background: #1a1a1f;
-            border-radius: 12px;
-            margin-top: 12px;
+            background: linear-gradient(145deg, #101828, #0c1322);
+            border-radius: 18px;
+            margin-top: 16px;
             position: relative;
             overflow: hidden;
             border: 1px solid var(--border-color);
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.3);
         }
         #trendCanvas {
             width: 100%;
@@ -224,9 +261,154 @@
         }
 
         .explain {
-            line-height: 1.7;
+            line-height: 1.8;
             font-size: 14px;
-            color: var(--text-main);
+            color: var(--text-secondary);
+        }
+
+        /* 机器人图标 - 可拖拽 */
+        .robot-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--main-color), var(--main-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            box-shadow: 0 4px 15px rgba(79, 195, 247, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            user-select: none;
+        }
+
+        .robot-icon:active {
+            cursor: grabbing;
+        }
+
+        .robot-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(79, 195, 247, 0.6);
+        }
+
+        .robot-icon::after {
+            content: "🤖";
+            font-size: 30px;
+        }
+
+        /* 对话窗口 */
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 340px;
+            height: 450px;
+            background: var(--panel-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            user-select: none;
+        }
+
+        .chat-header {
+            padding: 16px 20px;
+            background: rgba(79, 195, 247, 0.1);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: grab;
+        }
+
+        .chat-header:active {
+            cursor: grabbing;
+        }
+
+        .chat-header h4 {
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .chat-close {
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .chat-close:hover {
+            color: #fff;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 85%;
+        }
+
+        .user-message {
+            background: rgba(79, 195, 247, 0.2);
+            color: var(--text-primary);
+            margin-left: auto;
+        }
+
+        .ai-message {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            margin-right: auto;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        #chatInput {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            user-select: text;
+        }
+
+        #sendBtn {
+            padding: 12px 20px;
+            background: var(--main-color);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #sendBtn:hover {
+            background: var(--main-light);
         }
     </style>
 </head>
@@ -318,6 +500,26 @@
         </div>
     </div>
 
+    <!-- 机器人图标 -->
+    <div class="robot-icon" id="robotIcon"></div>
+
+    <!-- 对话窗口 -->
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header" id="chatHeader">
+            <h4>💬 云仿真助手</h4>
+            <span class="chat-close" id="chatClose">×</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message ai-message">
+                你好！我是云形成仿真助手，可以为你讲解实验原理、解答参数问题，也可以帮你分析当前的仿真数据。
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="输入你的问题...">
+            <button id="sendBtn">发送</button>
+        </div>
+    </div>
+
     <script>
         // 元素获取
         const cabin = document.getElementById('cabin');
@@ -336,6 +538,15 @@
         const resetBtn = document.getElementById('resetBtn');
         const canvas = document.getElementById('trendCanvas');
         const ctx = canvas.getContext('2d');
+
+        // 机器人&聊天窗口元素
+        const robotIcon = document.getElementById('robotIcon');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatClose = document.getElementById('chatClose');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatHeader = document.getElementById('chatHeader');
 
         // 基础配置
         const MAX_RECORD = 90;
@@ -362,7 +573,7 @@
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
 
-        // 趋势图 - 纯空心折线
+        // 趋势图绘制
         function drawChart() {
             const w = canvas.width;
             const h = canvas.height;
@@ -374,7 +585,7 @@
             let yMax = maxVal === 0 ? 10 : Math.ceil(maxVal / 10) * 10;
 
             ctx.strokeStyle = 'rgba(79, 195, 247, 0.2)';
-            ctx.fillStyle = '#b0b0b0';
+            ctx.fillStyle = '#b8c2cc';
             ctx.lineWidth = 1;
             const ySplit = 5;
             for (let i = 0; i <= ySplit; i++) {
@@ -406,7 +617,7 @@
             ctx.lineTo(w - pad, h - pad);
             ctx.stroke();
 
-            ctx.fillStyle = '#b0b0b0';
+            ctx.fillStyle = '#b8c2cc';
             ctx.font = "12px Microsoft Yahei";
             ctx.fillText("云团数量", 5, 20);
             ctx.fillText("运行时序", w - 60, h - 8);
@@ -424,7 +635,7 @@
             ctx.stroke();
         }
 
-        // 创建单个粒子
+        // 创建粒子
         function createParticle(type, sp) {
             const el = document.createElement('div');
             if (type === 'water') {
@@ -440,7 +651,7 @@
             return el;
         }
 
-        // 初始化（仅重置按钮调用）
+        // 初始化
         function initAll() {
             cabin.innerHTML = '';
             waterList = [];
@@ -467,7 +678,7 @@
             drawChart();
         }
 
-        // 动态增减水汽粒子（不删云、不清图表）
+        // 增减水汽粒子
         function adjustWater(targetNum) {
             const diff = targetNum - waterList.length;
             const sp = 1.2 * (windSpeed / baseWind);
@@ -481,7 +692,7 @@
             }
         }
 
-        // 动态增减凝结核粒子（不删云、不清图表）
+        // 增减凝结核粒子
         function adjustDust(targetNum) {
             const diff = targetNum - dustList.length;
             const sp = 0.8 * (windSpeed / baseWind);
@@ -495,7 +706,7 @@
             }
         }
 
-        // 统一修改所有粒子速度（核心：不重建、不删除任何元素）
+        // 修改所有粒子速度
         function updateAllSpeed(ratio) {
             waterList.forEach(p => { p.vx *= ratio; p.vy *= ratio; });
             dustList.forEach(p => { p.vx *= ratio; p.vy *= ratio; });
@@ -516,7 +727,7 @@
             });
         }
 
-        // 更新文字提示
+        // 提示文字更新
         function refreshTip() {
             if (!isRun) return;
             if (nowTemp > 0) {
@@ -528,7 +739,7 @@
             }
         }
 
-        // 云量计算（平滑变化）
+        // 云量更新
         function updateCloud() {
             let target = 0;
             if (nowTemp < 0) {
@@ -572,29 +783,25 @@
             requestAnimationFrame(loop);
         }
 
-        // ========== 滑块事件（全部不重置粒子/数据） ==========
-        // 水蒸气
+        // 滑块事件
         waterSlider.oninput = function () {
             waterCount = +this.value;
             waterVal.innerText = waterCount;
             adjustWater(waterCount);
         };
 
-        // 凝结核
         dustSlider.oninput = function () {
             dustCount = +this.value;
             dustVal.innerText = dustCount;
             adjustDust(dustCount);
         };
 
-        // 温度
         tempSlider.oninput = function () {
             nowTemp = +this.value;
             tempVal.innerText = nowTemp;
             refreshTip();
         };
 
-        // 风速【重点修复】：只改速度，不重建粒子、不清空数据
         windSlider.oninput = function () {
             const oldSpeed = windSpeed;
             windSpeed = +this.value;
@@ -603,19 +810,111 @@
             updateAllSpeed(ratio);
         };
 
-        // 启动
         startBtn.onclick = function () {
             isRun = true;
             statusText.innerText = "运行中";
             refreshTip();
         };
 
-        // 重置（仅此处完整复位）
         resetBtn.onclick = function () {
             initAll();
         };
 
-        // 初始化运行
+        // ========== 机器人图标 拖拽逻辑 ==========
+        let robotDrag = false;
+        let robotOffsetX, robotOffsetY;
+        robotIcon.addEventListener('mousedown', e => {
+            robotDrag = true;
+            robotOffsetX = e.clientX - robotIcon.offsetLeft;
+            robotOffsetY = e.clientY - robotIcon.offsetTop;
+            robotIcon.style.right = 'auto';
+            robotIcon.style.bottom = 'auto';
+        });
+
+        // ========== 聊天窗口 拖拽逻辑 ==========
+        let chatDrag = false;
+        let chatOffsetX, chatOffsetY;
+        chatHeader.addEventListener('mousedown', e => {
+            chatDrag = true;
+            chatOffsetX = e.clientX - chatWindow.offsetLeft;
+            chatOffsetY = e.clientY - chatWindow.offsetTop;
+            chatWindow.style.right = 'auto';
+            chatWindow.style.bottom = 'auto';
+        });
+
+        // 全局移动监听
+        document.addEventListener('mousemove', e => {
+            const winW = document.documentElement.clientWidth;
+            const winH = document.documentElement.clientHeight;
+
+            // 限制机器人不超出屏幕
+            if (robotDrag) {
+                let x = e.clientX - robotOffsetX;
+                let y = e.clientY - robotOffsetY;
+                x = Math.max(0, Math.min(x, winW - robotIcon.offsetWidth));
+                y = Math.max(0, Math.min(y, winH - robotIcon.offsetHeight));
+                robotIcon.style.left = x + 'px';
+                robotIcon.style.top = y + 'px';
+            }
+
+            // 限制聊天窗口不超出屏幕
+            if (chatDrag) {
+                let x = e.clientX - chatOffsetX;
+                let y = e.clientY - chatOffsetY;
+                x = Math.max(0, Math.min(x, winW - chatWindow.offsetWidth));
+                y = Math.max(0, Math.min(y, winH - chatWindow.offsetHeight));
+                chatWindow.style.left = x + 'px';
+                chatWindow.style.top = y + 'px';
+            }
+        });
+
+        // 结束拖拽
+        document.addEventListener('mouseup', () => {
+            robotDrag = false;
+            chatDrag = false;
+        });
+
+        // 点击机器人 打开/关闭弹窗
+        robotIcon.addEventListener('click', () => {
+            // 拖拽时不触发点击
+            if(robotDrag) return;
+            chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // 关闭弹窗
+        chatClose.addEventListener('click', () => {
+            chatWindow.style.display = 'none';
+        });
+
+        // 发送消息
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-message user-message';
+            userMsg.textContent = text;
+            chatMessages.appendChild(userMsg);
+            chatInput.value = '';
+
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'chat-message ai-message';
+                aiMsg.textContent = '我收到你的问题啦！目前我还在学习中，你可以先试试调整温度、风速等参数，观察云团的变化哦~';
+                chatMessages.appendChild(aiMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 800);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // 页面初始化
         initAll();
         loop();
     </script>
+</body>
+</html>
